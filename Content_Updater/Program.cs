@@ -23,17 +23,7 @@ namespace Content_Updater
         {
             List<String> urilist = new List<string> { "http://dodgydealers.azurewebsites.net/api/product", "http://undercutters.azurewebsites.net/api/product" };
             ContentUpdater cu = new ContentUpdater(urilist);
-            cu.insertData(prodlist);
-            cu.writeOrders();
-            while (Console.ReadKey().Key != ConsoleKey.Escape)
-            {
-                Timer aTimer = new Timer(60000 * 60 * 6);
-                aTimer.AutoReset = true;
-                aTimer.Start();
-                Console.WriteLine("Timer Started");
-                Console.WriteLine(aTimer.Interval);
-                aTimer.Elapsed += (sender, e) => cu.OnTimedEvent(sender, e, urilist);
-            }
+            cu.Run();
         }
 
 

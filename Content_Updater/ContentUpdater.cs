@@ -17,12 +17,30 @@ namespace Content_Updater
     {
         List<string> urilist;
         List<Product_table2> prodlist;
-        IProductRepository ProdRepo = new IProductRepository(new ProdDB());
+        IProductRepository ProdRepo; 
 
         public ContentUpdater(List<string> urilist)
         {
             this.urilist = urilist;
+            ProdRepo = new IProductRepository(new ProdDB());
+            Run();
+        }
+
+        public void Run()
+        {
             prodlist = getAllproducts(urilist);
+            insertData(prodlist);
+            writeOrders();
+            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+                Timer aTimer = new Timer(60000 * 60 * 6);
+                aTimer.AutoReset = true;
+                aTimer.Start();
+                Console.WriteLine("Timer Started");
+                Console.WriteLine(aTimer.Interval);
+                aTimer.Elapsed += (sender, e) => OnTimedEvent(sender, e, urilist);
+            }
+
         }
 
         public  void OnTimedEvent(object sender, ElapsedEventArgs e, List<String> urilist)
