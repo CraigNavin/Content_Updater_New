@@ -17,21 +17,18 @@ namespace Content_Updater
     {
         List<string> urilist;
         List<Product_table2> prodlist;
-        IProductRepository ProdRepo; 
 
         public ContentUpdater(List<string> urilist)
         {
             this.urilist = urilist;
-            ProdRepo = new IProductRepository(new ProdDB());
-            Run();
         }
 
         public void Run()
         {
+            Console.WriteLine("Content Updater");
             prodlist = getAllproducts(urilist);
             insertData(prodlist);
-            writeOrders();
-            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            do
             {
                 Timer aTimer = new Timer(60000 * 60 * 6);
                 aTimer.AutoReset = true;
@@ -39,13 +36,13 @@ namespace Content_Updater
                 Console.WriteLine("Timer Started");
                 Console.WriteLine(aTimer.Interval);
                 aTimer.Elapsed += (sender, e) => OnTimedEvent(sender, e, urilist);
-            }
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
 
         }
 
         public  void OnTimedEvent(object sender, ElapsedEventArgs e, List<String> urilist)
         {
-            prodlist = checkforUpdates(ProdRepo.getProducts(), getAllproducts(urilist));
+            prodlist = checkforUpdates(new IProductRepository(new ProdDB()).getProducts(), getAllproducts(urilist));
             insertData(prodlist);
 
         }
@@ -139,16 +136,6 @@ namespace Content_Updater
 
 
                 return fullList;
-                /*if (result != null)
-                {
-                    insertData(fullList);
-                }
-                else
-                {
-                    Console.WriteLine("Null List Passed");
-                    Console.ReadLine();
-                   
-                }*/
             }
 
         }
@@ -193,27 +180,7 @@ namespace Content_Updater
             return list;
         }
 
-        public  void writeOrders()
-        {
-
-            List<Orders> orders = ProdRepo.getOrders();
-
-            string OG_path = Path.Combine(Path.GetFullPath(Directory.GetCurrentDirectory()), @"..\..\");
-            foreach (Orders o in orders)
-            {
-                string path = Path.Combine(OG_path, o.product_Name + "Order.txt");
-                string contents = string.Format(@"OrderID: {0} {5}" +
-                    "ProductID: {1} {5}" +
-                    "Product Name: {2} {5}" +
-                    "Price: {3} {5}" +
-                    "Qty: {4}", o.OrderID, o.prodID, o.product_Name, o.price, o.qty, Environment.NewLine);
-                using (TextWriter tw = new StreamWriter(path))
-                {
-                    tw.Write(contents);
-                }
-
-            }
-        }
+        
 
         public  List<Product_table2> buildList(dynamic json, int listlen)
         {

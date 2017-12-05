@@ -16,14 +16,14 @@ namespace Content_Updater
 {
     class Program
     {
-
-        static List<Product_table2> prodlist;
-
         static void Main(string[] args)
         {
             List<String> urilist = new List<string> { "http://dodgydealers.azurewebsites.net/api/product", "http://undercutters.azurewebsites.net/api/product" };
             ContentUpdater cu = new ContentUpdater(urilist);
+            LegacyService ls = new LegacyService();
+            ls.writeOrders();
             cu.Run();
+            
         }
 
 
