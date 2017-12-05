@@ -22,6 +22,11 @@ namespace ProductRepository
             context.SaveChanges();
         }
 
+        public List<Product_table2> getProducts()
+        {
+            return context.Product_table2.ToList();
+        }
+
         public List<Orders> getOrders()
         {
             return context.Orders_Table.ToList();    
