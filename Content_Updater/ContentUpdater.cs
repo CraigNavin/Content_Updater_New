@@ -18,6 +18,11 @@ namespace Content_Updater
         List<string> urilist;
         List<Product_table2> prodlist;
 
+        public ContentUpdater()
+        {
+
+        }
+
         public ContentUpdater(List<string> urilist)
         {
             this.urilist = urilist;
@@ -26,7 +31,7 @@ namespace Content_Updater
         public void Run()
         {
             Console.WriteLine("Content Updater");
-            prodlist = getAllproducts(urilist);
+            prodlist = getAllproducts();
             insertData(prodlist);
             do
             {
@@ -42,7 +47,7 @@ namespace Content_Updater
 
         public  void OnTimedEvent(object sender, ElapsedEventArgs e, List<String> urilist)
         {
-            prodlist = checkforUpdates(new IProductRepository(new ProdDB()).getProducts(), getAllproducts(urilist));
+            prodlist = checkforUpdates(new IProductRepository(new ProdDB()).getProducts(), getAllproducts());
             insertData(prodlist);
 
         }
@@ -67,7 +72,7 @@ namespace Content_Updater
             return updatedList;
         }
 
-        public  List<Product_table2> getAllproducts(List<string> urilist)
+        public  List<Product_table2> getAllproducts()
         {
 
             int count = 0;
@@ -170,7 +175,7 @@ namespace Content_Updater
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("WCF service completed");
+                    Console.WriteLine("End of WCF Service Reached");
                     break;
                 }
 
