@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content_Updater", "Content_Updater\Content_Updater.csproj", "{B3A785D2-BBD2-484E-80AA-8EFB8705987F}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductRepository", "Produc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseLayer", "DatabaseLayer\DatabaseLayer.csproj", "{FE937660-6506-4F64-B0D4-73A2FBA5BA52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content_UpdaterTests2", "Content_UpdaterTests2\Content_UpdaterTests2.csproj", "{AF1C7CBF-74C8-453A-96D1-8ECB0310BA37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content_UpdaterTests", "Content_UpdaterTests2\Content_UpdaterTests.csproj", "{AF1C7CBF-74C8-453A-96D1-8ECB0310BA37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

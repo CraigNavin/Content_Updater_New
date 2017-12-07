@@ -47,16 +47,33 @@ namespace Content_Updater
 
         public  void OnTimedEvent(object sender, ElapsedEventArgs e, List<String> urilist)
         {
-            prodlist = checkforUpdates(new IProductRepository(new ProdDB()).getProducts(), getAllproducts());
-            insertData(prodlist);
+            if (checkForUpdates(new IProductRepository(new ProdDB()).getProducts(), getAllproducts()))
+            {
+                prodlist = runUpdates(new IProductRepository(new ProdDB()).getProducts(), getAllproducts());
+                insertData(prodlist);
+            }
 
         }
 
-        public List<Product_table2> checkforUpdates(List<Product_table2> oldList, List<Product_table2> newList)
+        public bool checkForUpdates(List<Product_table2> oldList, List<Product_table2> newList)
+        {
+            for (int i = 0; i < oldList.Count; i++)
+            {
+
+                if (oldList[i].Price != newList[i].Price)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public List<Product_table2> runUpdates(List<Product_table2> oldList, List<Product_table2> newList)
         {
 
             List<Product_table2> updatedList = new List<Product_table2>();
-
+            
             for (int i = 0; i < oldList.Count; i++)
             {
 
@@ -79,7 +96,7 @@ namespace Content_Updater
             int maxtries = 3;
             using (var client = new WebClient())
             {
-                dynamic result = null;
+                 string result = null;
 
                 List<Product_table2> fullList = new List<Product_table2>();
                 client.Headers.Add("Content-Type:application/json");
@@ -128,7 +145,7 @@ namespace Content_Updater
                         {
                             Console.WriteLine("Max retries reached, exiting application");
                             Console.ReadLine();
-                            break;
+                            return null;
                         }
 
                     }
@@ -173,10 +190,20 @@ namespace Content_Updater
                     list.Add(product_Table2);
                     getbyid++;
                 }
-                catch (Exception)
+                catch (Exception e )
                 {
-                    Console.WriteLine("End of WCF Service Reached");
-                    break;
+                    if(e is NullReferenceException)
+                    {
+                        Console.WriteLine("End of WCF Service Reached");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("An error occured while creating the list");
+                        wcf.Close();
+                        return null;
+                    }
+                    
                 }
 
             } while (true);
@@ -187,38 +214,47 @@ namespace Content_Updater
 
         
 
-        public  List<Product_table2> buildList(dynamic json, int listlen)
+        public  List<Product_table2> buildList(string json, int listlen)
         {
             List<Product_table2> list = new List<Product_table2>();
             var result2 = JsonConvert.DeserializeObject<List<Product>>(json);
-            foreach (Product x in result2)
+            try
             {
-                Product_table2 prod = new Product_table2()
+                foreach (Product x in result2)
                 {
-                    ID = x.ID + listlen,
-                    Product_Name = x.Name,
-                    Product_Description = x.Description,
-                    Price = x.Price,
-                    Original_Price = x.Price,
-                    Ean = x.Ean,
-                    CategoryId = x.CategoryId,
-                    CategoryName = x.CategoryName,
-                    BrandId = x.BrandId,
-                    BrandName = x.BrandName,
+                    Product_table2 prod = new Product_table2()
+                    {
+                        ID = x.ID + listlen,
+                        Product_Name = x.Name,
+                        Product_Description = x.Description,
+                        Price = x.Price,
+                        Original_Price = x.Price,
+                        Ean = x.Ean,
+                        CategoryId = x.CategoryId,
+                        CategoryName = x.CategoryName,
+                        BrandId = x.BrandId,
+                        BrandName = x.BrandName,
 
-                };
-                if (x.ExpectedRestock.Equals(""))
-                {
-                    prod.ExpectedRestock = true;
-                }
-                else
-                {
-                    prod.ExpectedRestock = false;
-                }
+                    };
+                    if (x.ExpectedRestock.Equals(""))
+                    {
+                        prod.ExpectedRestock = true;
+                    }
+                    else
+                    {
+                        prod.ExpectedRestock = false;
+                    }
 
-                list.Add(prod);
-            }
-            return list;
+                    list.Add(prod);
+                }
+                return list;
+            } catch (Exception)
+            {
+                Console.WriteLine("An error occured while creating list");
+                return null;
+            }   
+            
+            
         }
 
         public  void insertData(List<Product_table2> list)

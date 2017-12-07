@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Content_Updater
 {
-    class LegacyService
+    public class LegacyService
     {
         public void writeOrders()
         {
