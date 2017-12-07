@@ -37,6 +37,27 @@ namespace ProductRepository
             context.Database.ExecuteSqlCommand("TRUNCATE TABLE Product_table2");
         }
 
+        public List<Product_table2> getProductsByBrandId(int? id)
+        {
+            return context.Product_table2.Where(p => p.BrandId == id).ToList();
+        }
+        public List<Product_table2> getProductsByCatId(int? id)
+        {
+            return context.Product_table2.Where(p => p.CategoryId == id).ToList();
+        }
+        public List<Product_table2> getProductsByString(string term)
+        {
+            return context.Product_table2.Where(p => p.Product_Name.Contains(term) || p.BrandName.Contains(term) || p.CategoryName.Contains(term)).ToList();
+        }
+        public List<Product_table2> getProductsMaxPrice(double price)
+        {
+            return context.Product_table2.Where(p => p.Price < price).ToList();
+        }
+        public List<Product_table2> getProductsMinPrice(double price)
+        {
+            return context.Product_table2.Where(p => p.Price > price).ToList();
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();
